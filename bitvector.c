@@ -1,5 +1,6 @@
 #include <inttypes.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -30,14 +31,17 @@ void del_bitv8(bitv8 **bv8) {
   *bv8 = NULL;
 }
 
-bool set_bitv8(bitv8 *bv8, uint8_t *bit) {
+bool set_bitv8(bitv8 *bv8, uint8_t bit) {
   return bv8->vector[bit / 8] |= (0x1 << (bit % 8)) ? true : false;
 }
 
-bool clear_bitv8(bitv8 *bv8, uint8_t *bit) {
+bool clear_bitv8(bitv8 *bv8, uint8_t bit) {
   return bv8->vector[bit / 8] &= ~(0x1 << (bit % 8)) ? true : false;
 }
 
-bool get_bitv8(bitv8 *bv8, uint8_t *bit) {
-  return (bv8->vector(bit / 8) >> bit % 8) & 0x1;
+bool get_bitv8(bitv8 *bv8, uint8_t bit) {
+  if (bit <= bv8->val && bv8 && bv8->vector) {
+    return (bv8->vector[bit / 8] >> bit % 8) & 0x1;
+  }
+  return false;
 }
